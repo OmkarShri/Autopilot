@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+   
+    <web_adminhtml_main_index>
+
+        <update handle="web_main_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="main" template="autopilot/main.phtml"/>
+        </reference> 
+
+        <!-- <reference name="content">
+            <block type="web/adminhtml_main" name="main" />
+        </reference> -->
+
+    </web_adminhtml_main_index>
+
+    <web_adminhtml_web_index>
+        <update handle="web_web_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="web" template="autopilot/competitor.phtml"/>
+        </reference>
+        <!-- <reference name="content">
+            <block type="web/adminhtml_web" name="web" />
+        </reference> -->
+    </web_adminhtml_web_index>
+
+     <web_adminhtml_web_addcomplink>
+        <update handle="web_web_addcomplink"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="addcomplink" template="autopilot/addcompetitor.phtml"/>
+        </reference>
+     </web_adminhtml_web_addcomplink>
+
+     <web_adminhtml_web_editcompetitorlink>
+        <update handle="web_web_editcompetitorlink"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="editcompetitorlink" template="autopilot/editcompetitor.phtml"/>
+        </reference>
+     </web_adminhtml_web_editcompetitorlink>
+
+     <!-- <web_adminhtml_rule_rulelink>   
+      <update handle="web_rule_rulelink"/>     
+        <reference name="content">
+            <block type="adminhtml/template" name="rulelink" template="autopilot/rulemanager.phtml"/>
+        </reference>
+     </web_adminhtml_rule_rulelink> -->
+
+         <web_adminhtml_rule_index>   
+      <update handle="web_rule_index"/>     
+        <reference name="content">
+            <block type="adminhtml/template" name="rule" template="autopilot/rulemanager.phtml"/>
+        </reference>
+     </web_adminhtml_rule_index>
+
+
+    <web_adminhtml_rule_addruleform>   
+      <update handle="web_rule_addruleform"/>     
+        <reference name="content">
+            <block type="adminhtml/template" name="addruleform" template="autopilot/addruleform.phtml"/>
+        </reference>
+     </web_adminhtml_rule_addruleform> 
+
+     <web_adminhtml_rule_editruleform>   
+      <update handle="web_rule_editruleform"/>     
+        <reference name="content">
+            <block type="adminhtml/template" name="editruleform" template="autopilot/editruleform.phtml"/>
+        </reference>
+     </web_adminhtml_rule_editruleform> 
+
+
+    <web_adminhtml_productlist_index>      
+        <reference name="content">
+            <block type="web/adminhtml_productlist" name="productlist" />
+        </reference> >
+    </web_adminhtml_productlist_index>
+
+     <web_adminhtml_productlist_massstatus>      
+        <reference name="content">
+           <block type="adminhtml/template" name="massstatus" template="autopilot/massruleupdate.phtml"/>            
+        </reference> >
+    </web_adminhtml_productlist_massstatus>
+
+     <web_adminhtml_web_runapi>      
+        <reference name="content">
+           <block type="adminhtml/template" name="runapi" template="autopilot/runapi.phtml"/>            
+        </reference> >
+    </web_adminhtml_web_runapi>
+
+    <web_adminhtml_rule_delrule>      
+        <reference name="content">
+           <block type="adminhtml/template" name="delrule" template="autopilot/delrule.phtml"/>            
+        </reference> 
+    </web_adminhtml_rule_delrule>
+
+    <web_adminhtml_web_authenticate>      
+        <reference name="content">
+           <block type="adminhtml/template" name="authenticate" template="autopilot/authenticate.phtml"/>            
+        </reference> 
+    </web_adminhtml_web_authenticate>
+
+</layout>
+

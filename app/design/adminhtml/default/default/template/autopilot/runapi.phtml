@@ -1,0 +1,58 @@
+
+<div style="width:500px; margin:0 auto; text-align:center;margin-top:5%;" id="ajax-cont">
+<p>Please wait, don't refresh or close the page...</p>
+<p><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'media/jqueryload.gif'; ?>" alt="" width="50px"/></p>
+</div>
+
+<?php
+
+//$myfile = getcwd()."/autopilotlog.txt";
+
+//if(file_exists($myfile)){
+  
+  //$path = $_SERVER['DOCUMENT_ROOT']."/autopilotlog.txt";
+  //$path = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)."autopilotlog.txt";
+  //readfile($path);
+  //unlink($myfile);
+//}
+
+?>
+
+<script>
+window.onload=function(){
+  runcode("0");
+};
+
+function runcode(nxt)
+{
+var next=nxt;
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    	
+    	if(xmlhttp.responseText == "1"){    		
+    		//document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+    		next = parseInt(next)+parseInt(10);
+    		
+    		runcode(next);
+    	}
+      if(xmlhttp.responseText == "0"){
+        document.getElementById('ajax-cont').innerHTML="<p>Successfully Completed....</p>"
+      }
+    }
+  }
+var baseurl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>";
+xmlhttp.open("GET",baseurl+"autoapi.php?step="+next,true);
+xmlhttp.send();
+}
+</script>

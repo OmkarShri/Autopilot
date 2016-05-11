@@ -1,0 +1,109 @@
+<div style="width:500px; margin:0 auto; text-align:center;margin-top:5%;" id="rule-update">
+<p>Deleting the rule, please don't refresh or close the page...</p>
+<p><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'media/jqueryload.gif'; ?>" alt="" width="50px"/></p>
+</div>
+<?php
+
+ $redirect = $this->getRequest()->getServer('HTTP_REFERER');
+ $ruleid = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('catalog/product')->getCollection();		
+		//$collection->addFieldToFilter('auto_ruleid', $id);
+	$collection->addFieldToFilter(array(
+	array('attribute'=>'auto_ruleid','eq'=>$ruleid)
+	));
+
+	$pids = array();	
+	foreach ($collection as $product)
+	{
+	 	$pids[] = $product->getId();
+	}
+
+// Deleting the rule code
+	$resource = Mage::getSingleton('core/resource');
+	$writeConnection = $resource->getConnection('core_write');
+
+	$query = "delete from auto_rulemanager where ruleid=$ruleid";
+	$writeConnection->query($query);
+
+	$query = "delete from auto_rule_competitor where ruleid=$ruleid";
+	$writeConnection->query($query);
+
+	$query = "delete from auto_rule_cost where ruleid=$ruleid";
+	$writeConnection->query($query);
+// Deleting the rule code ends here
+
+// ajax update the rule to off for products.
+if(!empty($pids)){	
+?>
+
+<script>
+
+window.onload=function(){
+	
+	var pids = new Array();
+	<?php foreach($pids as $key => $val){ ?>
+	  pids.push('<?php echo $val; ?>');
+	<?php } ?>
+	delrule(pids,0);
+};
+
+function delrule(pidarr,val){
+	var rule = "<?php echo $ruleid; ?>";
+	var next = val;
+	var copypids = new Array();
+	copypids = pidarr.slice();
+
+	var pid = pidarr[next];
+
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {	    	
+	    	if(xmlhttp.responseText == "1"){    		
+	    		//document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+	    		
+	    		next = next+1;
+	    		delrule(copypids,next);
+	    	}
+		    else {
+		    	alert("Successfully deleted...");
+		    	window.location="<?php echo $redirect; ?>";		       
+		    }
+	    }
+	  }
+	var baseurl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>";
+	if(pid == undefined){ pid = ""; }
+	xmlhttp.open("GET",baseurl+"delruleupdate.php?pid="+pid+"&rule="+rule,true);
+	//xmlhttp.open("GET","autoapi.php?step="+next,true);
+	xmlhttp.send();
+ }   
+</script> 
+
+<?php 
+	
+	} else {
+
+?>
+
+<script type="text/javascript">
+	alert("Successfully deleted...");
+	window.location="<?php echo $redirect; ?>";	
+</script>
+
+<?php
+
+	} 
+
+?>
+
+
+

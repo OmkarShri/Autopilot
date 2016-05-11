@@ -1,0 +1,74 @@
+<style>
+table{width:100%; border: 1px solid #ccc;}
+th,td{border: 1px solid #ccc; vertical-align: middle;}
+p.msg{ padding: 5px 10px; border: 1px solid #ccc; background: #ddd; width: 100%; color: #FC0505; font-weight: bold; }
+.form-block{ clear: both; padding: 10px; border: 1px solid #ccc; width: 100%; }
+td{ font-size: 15px; padding: 10px;}
+textarea{ height: 60px;  width: 95%; }
+input.submit-btn{font-size: 15px;  font-weight: bold;  height: 32px;  margin-top: 15px;  padding: 0;  width: 95px;}
+input.inpt-text{width: 95%; height:20px;padding-left: 5px;}
+</style>
+
+<div style="width:100%; float:left;">
+
+	<div style="width:600px; margin:0 auto;">
+		<h1>Add Competitor</h1>		
+		<?php 
+			if(Mage::getSingleton('core/session')->getAutoMsg()){
+				echo "<p class='msg'>".Mage::getSingleton('core/session')->getAutoMsg()."</p>";
+			}
+			Mage::getSingleton('core/session')->unsAutoMsg();
+		?>
+	<div class="form-block">
+	<form action="<?php echo $this->getBaseUrl().'web/adminhtml_web/addcompetitor'; ?>" method="post" onsubmit="return validatefrm();" >
+
+		<table>
+			<tr>
+				<td><strong>Competitor Name: </strong></td>
+				<td><input class="inpt-text" type="text" name="compname" id="compname" placeholder="Enter competitor name"/></td>				
+			</tr>
+			<tr>
+				<td><strong>Agent Id: </strong></td>
+				<td>
+					<textarea name="agents" id="agents" placeholder="Enter agent id's"></textarea>
+					<p style="font-size: 10px;">Example: 1055:1022:1045</p>
+				</td>
+			</tr>
+			<tr>
+				<td><strong>Status</strong></td>
+				<td>
+					<p><input type="radio" name="compstatus" value="yes" /> Enable</p>
+					<p><input type="radio" name="compstatus" value="no" checked /> Disable</p>
+				</td>				
+			</tr>
+			
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+		</table>
+		<input class="submit-btn" type="submit" name="addcomp" value="Submit"/>
+	</form>
+	</div>
+	<p style="text-align:right; font-size: 15px; padding: 10px; text-align: right; width:100%; "><a href="<?php echo Mage::helper("adminhtml")->getUrl("web/adminhtml_web/"); ?>">Back</a></p>
+
+	</div>
+
+</div>
+
+<script>
+function validatefrm(){	
+	 var agentid = document.getElementById('compid').value;
+	 var compname = document.getElementById('compname').value;
+
+	if(agentid == ""){
+		alert("Enter the Competitor ID name");
+		return false;
+	}	
+	if(isNaN(agentid)){
+		alert("Enter only Numeric values");
+		return false;
+	}
+	if(compname == ""){
+		alert("Enter the competitor name");
+		return false;
+	}	
+}
+</script>

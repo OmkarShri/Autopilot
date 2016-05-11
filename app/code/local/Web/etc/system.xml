@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+    <tabs>
+        <webtext translate="label" module="web">
+            <label>Autopilot</label>
+            <sort_order>100</sort_order>
+        </webtext>
+    </tabs>
+
+    <sections>
+        <webtext translate="label" module="web">
+            <label>Autopilot Setup</label>
+            <tab>webtext</tab>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <webtext_group translate="label" module="web">
+                    <label>Autopilot API key</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <webtext_input translate="label">
+                            <label>API Key: </label>
+                            <comment>API key</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </webtext_input>                        
+                    </fields>
+                </webtext_group>
+            </groups>
+        </webtext>
+    </sections>
+</config>

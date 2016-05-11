@@ -1,0 +1,228 @@
+<style>
+
+input{ padding:4px; margin: 0 4px; }
+textarea{padding:4px; margin: 0 4px;}
+select{  min-width: 120px; padding: 4px; margin: 0 4px;}
+.wrapper{width:100%; float: left;}
+.main{width:700px;margin:0 auto; border: 1px solid #ccc; padding: 20px 10px;}
+.fullwidth{width:97%;}
+.rulemode{padding: 15px 0;}
+.cost{width:50px;}
+p.msg{ padding: 5px 10px; border: 1px solid #ccc; background: #ddd; width: 96%; color: #FC0505; font-weight: bold; }
+</style>
+
+<div class="wrapper">
+	<div class="main">
+		<h1>Rule Creation</h1>
+		
+		<?php if(Mage::getSingleton('core/session')->getAutoMsg()) { ?>
+		<p class='msg'><?php echo Mage::getSingleton('core/session')->getAutoMsg(); ?></p>
+		<?php Mage::getSingleton('core/session')->unsAutoMsg();
+		} ?>
+		<form action="<?php echo $this->getBaseUrl().'web/adminhtml_rule/addrule'; ?>" method="post" name="addrule" onsubmit="return validate()" id="formrule" >	
+
+			<p><input class="fullwidth" type="text" name="rname" placeholder="Rule Name" id="rname"/></p>
+			<p><textarea class="fullwidth" placeholder="Rule Description" name="rdesc" id="rdesc"></textarea></p>
+			<h2>Autopilot Logic</h2>
+			<div class="rulemode" style="border-bottom:1px solid #ccc;">
+			<p><input type="radio" name="rtype" checked value="competitor"> Competitor Based Pricing</p>
+			<p>
+				<select name="level" id="level">
+					<option value="0">Choose one</option>
+					<option value="A">Above</option>
+					<option value="B">Below</option>
+					<option value="E">Equal</option>
+				</select>
+
+				<select name="topcomp" id="topcomp">
+					<option value="0">Choose one</option>
+				<?php 
+					$resource = Mage::getSingleton('core/resource');
+					$readConnection = $resource->getConnection('core_read');
+					$query = "select * from auto_competitor where status='yes'";
+					$res = $readConnection->fetchAll($query);
+					for($i=1; $i<=count($res); $i++) {
+				?>
+				<option value="<?php echo $i; ?>"><?php echo "Top ".$i." Competitor"; ?></option>
+				<?php
+					}		
+				?>				
+				</select>
+				<span>by</span>
+				<input type="text" name="rate" id="rate"  class="cost" maxlength="6"/>
+				<select name="mode" id="mode">
+					<option value="0">Choose one</option>
+					<option value="fixed">$</option>
+					<option value="percent">%</option>					
+				</select>
+			</p>
+			<p style="padding: 25px 0 10px;"><strong>Autopilot Guardian</strong> What to do if autopilot price gets below cost:</p>
+			<p><input type="radio" name="gmode" checked value="currentprice"/> Leave product at current price</p>
+			<p><input type="radio" name="gmode"  value="disable"/> Disable product</p>
+			<p><input type="radio" name="gmode" value="setprice"/> Set price Above cost by <input type="text" name="gprice"  id="gprice"  class="cost"  maxlength="6"/>
+				<select name="gpricemode" id="gpricemode">
+					<option value="0">Choose one</option>
+					<option value="fixed">$</option>
+					<option value="percent">%</option>					
+				</select>
+			</p>
+			</div>
+
+			<div class="rulemode">
+				<p><input type="radio" name="rtype" value="cost"> Cost Based Pricing</p>
+				<p>Above cost by <input type="text" name="costprice" id="costprice"  class="cost"  maxlength="6"/>
+				<select name="costpmode" id="costpmode">
+					<option value="0">Choose one</option>
+					<option value="fixed">$</option>
+					<option value="percent">%</option>					
+				</select>	
+				</p>
+			</div>
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+			<div><input type="submit" name="rulesubmit" value="Submit" /></div>
+
+
+		</form>
+	</div>
+
+
+</div>
+
+
+<script type="text/javascript">
+function validate(){
+
+var rname = document.getElementById('rname').value;
+var rdesc = document.getElementById('rdesc').value;
+var rate = document.getElementById('rate').value;
+var gprice = document.getElementById('gprice').value;
+var costprice = document.getElementById('costprice').value;
+
+if( rname == ""){
+	alert("Please enter the Rule name");
+	return false;
+}
+if( rdesc == ""){
+	alert("Please enter the Rule description");
+	return false;
+}
+
+
+var form = document.getElementById('formrule'); // if you passed the form, you wouldn't need this line.
+     for(var i = 0; i < form.rtype.length; i++)
+     {
+          if(form.rtype[i].checked)
+          {
+          var ruletype = form.rtype[i].value;
+          }
+ 
+     }
+
+if(ruletype == "competitor"){
+	if( document.addrule.level.value == "0" )
+	   	{
+		     alert( "Select the price level" );
+		     document.addrule.level.style = "border-color:#F90000";
+		     return false;
+	   }
+	   else{
+	   	document.addrule.level.style = "border-color:#bbb";
+	   }
+
+	   if( document.addrule.topcomp.value == "0" )
+	   	{
+		     alert( "Select the top competitor" );
+		     document.addrule.topcomp.style = "border-color:#F90000";
+		     return false;
+	   }
+	   else{
+	   	document.addrule.topcomp.style = "border-color:#bbb";
+	   }
+
+	   if(rate == ""){
+		   	alert("Please enter the price");
+		   	document.getElementById('rate').focus();
+			return false;
+	   }
+	 	
+	 	if(isNaN(rate)){
+	 		alert("Please enter numeric values");
+	 		document.getElementById('rate').focus();
+	 		return false;
+	 	}
+
+	   if( document.addrule.mode.value == "0" )
+	   {
+	     alert( "Select the price mode" );
+	     document.addrule.mode.style = "border-color:#F90000";
+	     return false;
+	   }
+	   else{
+	   	document.addrule.mode.style = "border-color:#bbb";
+	   }
+
+
+     for(var i = 0; i < form.gmode.length; i++)
+     {
+          if(form.gmode[i].checked)
+          {
+          var radiogmode = form.gmode[i].value;
+          }
+     }
+
+     if(radiogmode == "setprice"){
+     	if(gprice == ""){
+     		alert("Enter the price");
+     		document.getElementById('gprice').focus();
+     		return false;
+     	}
+
+     	if(isNaN(gprice)){
+     		alert("Enter the numeric value");
+     		document.getElementById('gprice').focus();
+     		return false;
+     	}
+
+     	if( document.addrule.gpricemode.value == "0" )
+	   	{
+		     alert( "Select the guardian price mode" );
+		     document.addrule.gpricemode.style = "border-color:#F90000";
+		     return false;
+	   }
+	   else{
+	   	document.addrule.gpricemode.style = "border-color:#bbb";
+	   }
+
+     }
+}
+
+
+if(ruletype == "cost"){
+
+	if(costprice == ""){
+ 		alert("Enter the price");
+ 		document.getElementById('costprice').focus();
+ 		return false;
+ 	}
+
+ 	if(isNaN(costprice)){
+     		alert("Enter the numeric value");
+     		document.getElementById('costprice').focus();
+     		return false;
+     	}
+
+ 	if( document.addrule.costpmode.value == "0" )
+	   	{
+		     alert( "Select the price mode" );
+		     document.addrule.costpmode.style = "border-color:#F90000";
+		     return false;
+	   }
+	   else{
+	   	document.addrule.costpmode.style = "border-color:#bbb";
+	   }
+
+
+}
+
+}
+</script>

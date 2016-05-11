@@ -1,0 +1,70 @@
+<style>
+.auth-wrapper{ width:500px; margin: 0 auto; background: #FFF9E9; border: 1px solid #eee2be;padding:40px 20px;text-align: center; border-radius: 5px; margin-top: 4%;  }
+.auth-wrapper p{ text-align: center;color:#444; font-size: 15px; }
+.auth-wrapper p input{width: 200px; height: 24px; margin: 5px 0; padding: 0 5px;}
+.auth-wrapper p input.submit-btn{  border: 1px solid #ccc;  border-radius: 5px; color: #444; cursor: pointer; font-weight: bold; height: auto;
+    padding: 5px; width: auto;}
+p.err-msg{color: #FC0509; font-size: 12px;}
+p.btns a{  border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #444;
+    cursor: pointer;
+    font-weight: bold;
+    height: auto;
+    padding: 5px;
+    width: auto;  margin: 10px;
+    padding: 5px 10px; text-decoration: none;background: #fff;}    
+.pass-blk{margin-top:35px; }
+.auth-wrapper a:hover{color: #eb5e00;}
+</style>
+
+<div class="auth-wrapper">	
+
+	<?php if(Mage::getSingleton('core/session')->getAutoSucAuth()) {  ?>
+
+
+	<p class="btns"><a href="<?php echo Mage::helper("adminhtml")->getUrl("web/adminhtml_productlist"); ?>">Product List</a> <a href="<?php echo Mage::helper("adminhtml")->getUrl("web/adminhtml_web/authlogout"); ?>" />Logout</a>
+	</p>
+	<div class="pass-blk">
+		<form action="<?php echo $this->getBaseUrl().'web/adminhtml_web/authuserchangepass'; ?>" name="authenticate" method="post" onsubmit="return checkempty()">
+			<?php if(Mage::getSingleton('core/session')->getAutoErrAuth()) { ?>
+			<p class="err-msg"><?php echo Mage::getSingleton('core/session')->getAutoErrAuth(); ?></p>
+			<?php  
+				Mage::getSingleton('core/session')->unsAutoErrAuth(); 
+				} 
+			?>
+			<p>Change Password: <input id="changepwd" type="text" name="changepwd" /></p>							
+			<p><input class="submit-btn" type="submit" name="submitpwd" value="Submit"/></p>
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+		</form>
+	</div>
+
+
+	<?php  } else{  ?>
+
+
+
+	<form action="<?php echo $this->getBaseUrl().'web/adminhtml_web/authuser'; ?>" name="authenticate" method="post">
+		<p>Please enter the password</p>
+		<p><input type="password" name="auth" /></p>
+		<?php if(Mage::getSingleton('core/session')->getAutoErrAuth()) { ?>
+			<p class="err-msg"><?php echo Mage::getSingleton('core/session')->getAutoErrAuth(); ?></p>
+		<?php  
+			Mage::getSingleton('core/session')->unsAutoErrAuth(); 
+			} 
+		?>
+		<p><input class="submit-btn" type="submit" name="submit" value="Submit"/></p>
+		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+	</form>
+	<?php } ?>
+</div>
+<script type="text/javascript">
+function checkempty(){
+	var e = document.getElementById('changepwd');
+	if(e.value == ""){
+		alert("Password is empty");
+		return false;
+	}
+	else { return true; }
+}
+</script>

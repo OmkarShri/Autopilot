@@ -1,0 +1,65 @@
+<style>
+table,td,th{ border: 1px solid #ccc; text-align: center; vertical-align: middle;}
+th{background: #ddd; text-align: center; color: #000; }
+p.p-btn{text-align: right;clear: both; margin-bottom: 15px;}
+.a-btn{text-decoration: none;padding: 8px; background: #ddd; border: 1px solid #ccc; color: #000; font-weight: bold;}
+.a-btn:hover{text-decoration: none;}
+</style>
+
+
+<?php 
+
+	//Mage::getModel('web/api')->getmessage();
+
+	$resource = Mage::getSingleton('core/resource');
+	$readConnection = $resource->getConnection('core_read');
+	$writeConnection = $resource->getConnection('core_write');
+	
+	$query = 'SELECT * FROM auto_competitor';
+	$results = $readConnection->fetchAll($query);
+?>
+<div style = "width:100%; float:left;">
+
+	<div style="width:800px; margin:0 auto;">
+		<h1>Competitor Manager</h1>	
+		<p class="p-btn"><a class="a-btn" href="<?php echo Mage::helper("adminhtml")->getUrl("web/adminhtml_web/addcomplink"); ?>">Add Competitor</a></p>	
+
+	<form action="<?php echo $this->getBaseUrl().'web/adminhtml_web/compmanager'; ?>" method="post">
+	<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+	<table style="border:2px solid #ccc; width:100%;margin-bottom:20px;" >
+		<tr>
+			<th>ID</th>
+			<th>Competitor</th>			
+			<th>Agents</th>
+			<th>Status</th>			
+			<th></th>
+		</tr>
+		
+			<?php
+				foreach($results as $row){
+					$agent = $row['id'];
+					echo "<tr>";
+					echo "<td width='5%'>".$row['id']."</td>";		
+					echo "<td width='20%'>".$row['competitor']."</td>";							
+					echo "<td width='30%'><p style='width:100%;'>".$row['agent_id']."</p></td>";							
+					$check = "";
+					if($row['status'] == 'yes' ){ $check = "checked"; } else { $check = ""; }
+					echo "<td width='10%'><input type='checkbox' name='status[]' " .$check. "  value='".$row['id']."' /></td>";	
+					//echo "<td><a style='margin-right:10px;' herf='#'>Edit</a><a href='#'>Delete</a></td>";	
+					?>
+					<td width='15%'>
+						<a href='<?php echo Mage::helper("adminhtml")->getUrl("web/adminhtml_web/editcompetitorlink",array("id"=>$agent)); ?>'>Edit</a>
+						<span style="margin:0 5px;">|</span>
+						<a href='<?php echo Mage::helper("adminhtml")->getUrl("web/adminhtml_web/delcompetitor",array("id"=>$agent)); ?>'>Delete</a>
+					</td>
+
+			<?php
+					echo "</tr>";
+					}
+			?>
+		</tr>		
+	</table>
+	<p><input type="submit" name="submit" value="Submit"/></p>
+	</form>	
+	</div>
+</div>

@@ -1,0 +1,81 @@
+<?php
+
+ $pids = $this->getRequest()->getParam('pid');       
+ $ruleid = $this->getRequest()->getParam('rule'); 
+ $redirect = $this->getRequest()->getServer('HTTP_REFERER');
+
+$resource = Mage::getSingleton('core/resource');
+$readConnection = $resource->getConnection('core_read');
+$query="select * from auto_rulemanager where ruleid=".$ruleid;
+$res = $readConnection->fetchAll($query); 
+
+if($res){
+
+?>
+<div style="width:500px; margin:0 auto; text-align:center;margin-top:5%;" id="rule-update">
+<p>Please wait while it is loading, don't refresh or close the page...</p>
+<p><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'media/jqueryload.gif'; ?>" alt="" width="50px"/></p>
+</div>
+
+<script>
+
+window.onload=function(){
+	
+	 var pids = new Array();
+	 <?php foreach($pids as $key => $val){ ?>
+	    pids.push('<?php echo $val; ?>');
+	 <?php } ?>
+	ruleupdate(pids,0);
+};
+
+function ruleupdate(pidarr,val){
+	var rule = "<?php echo $ruleid; ?>";
+	var next = val;
+	var copypids = new Array();
+	copypids = pidarr.slice();
+
+	var pid = pidarr[next];
+
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {	    	
+	    	if(xmlhttp.responseText == "1"){    		
+	    		//document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+	    		next = next+1;
+	    		ruleupdate(copypids,next);
+	    	}
+		    else {
+		    	window.location="<?php echo $redirect; ?>";
+		        document.getElementById('rule-update').innerHTML="<p>Successfully Completed....</p>"
+		    }
+	    }
+	  }
+	var baseurl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>";
+	xmlhttp.open("GET",baseurl+"ruleupdate.php?pid="+pid+"&rule="+rule,true);
+	//xmlhttp.open("GET","autoapi.php?step="+next,true);
+	xmlhttp.send();
+ }   
+</script>
+
+<?php
+
+}
+else{
+?>
+	<script type="text/javascript">
+		alert("Rule Doesn't exist");
+		window.location="<?php echo $redirect; ?>";
+	</script>
+<?php
+}
+?>

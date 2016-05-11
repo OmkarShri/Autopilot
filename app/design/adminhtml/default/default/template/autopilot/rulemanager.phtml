@@ -1,0 +1,69 @@
+<style>
+table,td,th{ border: 1px solid #ccc; }
+th{background: #ddd; text-align: center; color: #000; }
+p.p-btn{text-align: right;clear: both; margin-bottom: 15px;}
+.a-btn{text-decoration: none;padding: 8px; background: #ddd; border: 1px solid #ccc; color: #000; font-weight: bold;}
+.a-btn:hover{text-decoration: none;}
+
+td{text-align: center;  vertical-align: middle; }
+.action-btn{ width: 15%; }
+.rname{width: 22%;}
+p.msg{ padding: 5px 10px; border: 1px solid #ccc; background: #ddd; width: 96%; color: #FC0505; font-weight: bold; }
+</style>
+<?php 
+	$resource = Mage::getSingleton('core/resource');
+	$readConnection = $resource->getConnection('core_read');
+	$writeConnection = $resource->getConnection('core_write');	
+?>
+
+<div style="float:left; width:100%;">
+
+<div style="width:700px; margin:0 auto;">
+	<h1>Rule Manager</h1>
+	<p class="p-btn"><a href="<?php  echo Mage::helper("adminhtml")->getUrl("web/adminhtml_rule/addruleform"); ?>" class="a-btn">Add Rule</a></p>
+	<div>
+
+		<?php if(Mage::getSingleton('core/session')->getAutoMsg()) { ?>
+		<p class='msg'><?php echo Mage::getSingleton('core/session')->getAutoMsg(); ?></p>
+		<?php Mage::getSingleton('core/session')->unsAutoMsg();
+		} ?>
+
+		<table style="border:2px solid #ccc; width:100%;margin-bottom:20px;">
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Action</th>
+			</tr>
+			
+			<?php 
+				$query="select * from auto_rulemanager";
+				$res = $readConnection->fetchAll($query);
+				foreach($res as $row){ ?>
+				<tr>
+					<td class="rname"><?php echo trim($row['name']); ?></td>
+					<td><?php echo trim($row['ruledesc']); ?></td>
+					<td class="action-btn"><a href="<?php  echo Mage::helper("adminhtml")->getUrl("web/adminhtml_rule/editruleform",array("id"=>$row['ruleid'])); ?>">Edit</a> 
+						<span style="margin:0 5px;">|</span>
+					<!-- <a href="<?php  echo Mage::helper("adminhtml")->getUrl("web/adminhtml_rule/delrule",array("id"=>$row['ruleid'])); ?>">Delete</a> -->
+					<?php $delurl = Mage::helper("adminhtml")->getUrl("web/adminhtml_rule/delrule",array("id"=>$row['ruleid'])); ?>
+					 <a href="#" onclick='delconfrm("<?php echo $delurl; ?>")'>Delete</a>
+				</td>
+				</tr>
+			<?php } ?>
+			
+		</table>
+	</div>
+</div>
+
+
+</div> 
+
+<script>
+function delconfrm(delurl) {
+    var r = confirm("Are you sure?");
+    if (r == true) { 
+    	var url = delurl;    	
+    	document.location.href=url;
+    }
+}
+</script>

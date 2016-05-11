@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Company_Autoapi>
+            <version>0.1.0</version>
+        </Company_Autoapi>
+    </modules>
+    <global>
+        <models>
+            <autoapi>
+                <class>Company_Autoapi_Model</class>
+            </autoapi>
+        </models>
+        <helpers>
+            <autoapi>
+                <class>Company_Autoapi_Helper</class>
+            </autoapi>
+        </helpers>
+     </global>
+</config>
+
+<adminhtml>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <autoapi>
+                                        <title>Inchoo - All</title>
+                                    </autoapi>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</adminhtml>
